@@ -96,32 +96,38 @@ int main()
 
    while(1)
    {
-      int cnt = 0; 
-	   while(cnt < 200000)
-	   {
-		   GPIO_SET = 1 << 4;    // set GPIO4 to HIGH
-		   GPIO_READ(14);
-         GPIO_READ(15);
-         GPIO_READ(18);
-         GPIO_READ(23);
-         GPIO_READ(24);
-         GPIO_READ(25);
-         GPIO_READ(8);
-         GPIO_READ(7);
-         GPIO_READ(12);
-         GPIO_READ(16);
-         GPIO_READ(20);
-         GPIO_READ(21);
-         GPIO_READ(26);
-         GPIO_READ(19);
-         GPIO_READ(13);
-         GPIO_READ(6);
-		   GPIO_CLR = 1 << 4; 	// reset GPIO to LOW 
-         //int data = bit0 + bit1 + bit2 + bit3 + bit4 + bit5 + bit6 + bit7; 
-         //cnt++;
-         //printf("%i", data);
+     //disable IRQ
+     local_irq_disable();
+     local_fiq_disable();
+     int cnt = 0; 
+     while(cnt < 200000)   
+	{   
+		GPIO_SET = 1 << 4;    // set GPIO4 to HIGH
+		GPIO_READ(14);
+         	GPIO_READ(15);
+         	GPIO_READ(18);
+         	GPIO_READ(23);
+        	GPIO_READ(24);
+         	GPIO_READ(25);
+       	 	GPIO_READ(8);
+        	GPIO_READ(7);
+       		GPIO_READ(12);
+       		GPIO_READ(16);
+         	GPIO_READ(20);
+         	GPIO_READ(21);
+         	GPIO_READ(26);
+         	GPIO_READ(19);
+         	GPIO_READ(13);
+         	GPIO_READ(6);
+		GPIO_CLR = 1 << 4; 	// reset GPIO to LOW 
+         	//int data = bit0 + bit1 + bit2 + bit3 + bit4 + bit5 + bit6 + bit7; 
+         	//cnt++;
+         	//printf("%i", data);
    	}
+    //enable IRQ
+    local_fiq_enable();
+    local_irq_enable();
    }
       
-	return 0; 
+    return 0; 
 }
