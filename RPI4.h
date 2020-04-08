@@ -45,7 +45,7 @@ extern struct bcm2835_peripheral bsc0;	// so use extern!!
 #define GPIO_SET 	*(gpio.addr + 7)  // sets   bits which are 1 ignores bits which are 0
 #define GPIO_CLR 	*(gpio.addr + 10) // clears bits which are 1 ignores bits which are 0
 
-#define GPIO_READ(g) 	*(gpio.addr + 13) &= (1<<(g))
+#define GPIO_READ(g) 	*(gpio.addr + 13) &= (1<<(g)) // <--------- Explore this for faster SPEEEEED TOR! 
 
 // Function prototypes
 int map_peripheral(struct bcm2835_peripheral *p);
