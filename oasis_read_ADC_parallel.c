@@ -104,7 +104,6 @@ ADS8422 -> Raspberry Pi
    INP_GPIO(9);
    INP_GPIO(10);  
    INP_GPIO(11);   
-   INP_GPIO(11); 
    INP_GPIO(12);
    INP_GPIO(13);
    INP_GPIO(14);
