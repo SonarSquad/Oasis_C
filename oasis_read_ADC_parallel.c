@@ -1,3 +1,5 @@
+
+
 // OASIS Parallel ADC SW test 0.2
 //Author: Tor K. Gjerde
 
@@ -73,7 +75,35 @@ int main()
 		return -1; 
 	}
 
-	// Define GPIOs as input 
+	/*
+   Define GPIOs as input 
+   GPIOs used as laid out on the parallel ADC circuit board:
+
+ADS8422 -> Raspberry Pi 
+   bit 0 =  GPIO 14     32-bit-string index 15
+   bit 1 =  GPIO 15     32-bit-string index 16
+   bit 2 =  GPIO 18     32-bit-string index 19
+   bit 3 =  GPIO 23     32-bit-string index 24
+   bit 4 =  GPIO 24     32-bit-string index 25
+   bit 5 =  GPIO 25     32-bit-string index 26
+   bit 6 =  GPIO 8      32-bit-string index 9
+   bit 7 =  GPIO 7      32-bit-string index 8
+   bit 8 =  GPIO 12     32-bit-string index 13
+   bit 9 =  GPIO 16     32-bit-string index 17
+   bit 10 = GPIO 20     32-bit-string index 21
+   bit 11 = GPIO 21     32-bit-string index 22
+   bit 12 = GPIO 26     32-bit-string index 27
+   bit 13 = GPIO 19     32-bit-string index 20
+   bit 14 = GPIO 13     32-bit-string index 14
+   bit 15 = GPIO 6      32-bit-string index 7
+   
+   */
+   INP_GPIO(6); 
+   INP_GPIO(7);
+   INP_GPIO(8);
+   INP_GPIO(9);
+   INP_GPIO(10);  
+   INP_GPIO(11);   
    INP_GPIO(11); 
    INP_GPIO(12);
    INP_GPIO(13);
@@ -96,8 +126,8 @@ int main()
 	INP_GPIO(4);
 	OUT_GPIO(4); // redefine GPIO  as output for clock signal. 
 
-   int nbr_of_samples = 2000000; 
-   int data_array[2000000] = {}; 
+   int nbr_of_samples = 10; 
+   int data_array[10] = {}; 
    int cnt = 0; 
    // Disable IRQ  
    // Local_irq_disable()   <-- Needs to be done with a sepparate kernel module 
@@ -117,7 +147,10 @@ int main()
    for (int i = 0; i < nbr_of_samples; i++ ) // print the data array out 
    {
       printf("%i", data_array[i]); 
-      printf(","); 
+      if(i < nbr_of_samples - 1) // in order to NOT print a comma after last value 
+      {
+         printf(","); 
+      }
    }
     
 	return 0; 
