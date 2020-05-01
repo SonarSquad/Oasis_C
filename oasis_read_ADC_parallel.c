@@ -116,17 +116,22 @@ int main()
    INP_GPIO(25);
    INP_GPIO(26);
     
-
+   INP_GPIO(17);
    INP_GPIO(3); // Define GPIO 3 as input for BUSY pin from ADC 
 	INP_GPIO(4); // Define GPIO 4 as input before next step 
-	OUT_GPIO(4); // Redefine GPIO 4 as output CONVST
+   OUT_GPIO(17); // Redefine GPIO 17 as output RD 
+	OUT_GPIO(4);  // Redefine GPIO 4 as output CONVST
   
    int CONVST = 4; 
+   int BUSY = 3;
+   int RD = 17;
 
+   GPIO_SET = 1 << RD;        // set RD HIGH 
    GPIO_SET = 1 << CONVST;    // set CONVST HIGH 
 
-   int nbr_of_samples = 15000; 
-   int data_array[15000] = {}; 
+
+   int nbr_of_samples = 1000000; 
+   int data_array[1000000] = {}; 
    int counter = 0; 
    // Disable IRQ  
    // Local_irq_disable()  <-- This would needs to be done with a sepparate kernel module 
@@ -134,15 +139,13 @@ int main()
 
 	while(counter < nbr_of_samples)
 	 {
+      GPIO_CLR = 1 << RD; 
       GPIO_CLR = 1 << CONVST; 	// Reset CONVST to LOW - initiate adc conversion
 
-     _Bool BUSY_state = GPIO_READ_PIN(3);
-
+     _Bool BUSY_state = GPIO_READ_PIN(BUSY);
      //printf("%d\n",BUSY_state);
       //while(GPIO_READ_PIN(3) == 0){ //forces wait intil GPIO(3) is set high 
-
-      
-
+      //}
       while(GPIO_READ_PIN(3) == 1){ 
         // printf("entered BUSY loop");
          // while the BUSY pin is high wait for ADC to finish conversion and change apears on BUSY pin
@@ -150,11 +153,13 @@ int main()
       }
 
       data_array[counter] = GPIO_READ; // read the whole 32-bit GPIO register (includes ADC output)
-      sleep(0.001);
+      
+      GPIO_SET = 1 << RD;        // Bring RD pin HIGH again 
       GPIO_SET = 1 << CONVST;   // Bring CONVST pin high again 
-
+      
       counter++;
     }
+
    //Enable IRQ
    //local_fiq_enable(); <-- Needs to be done with a sepparate kernel module 
    //local_irq_enable(); <-- Needs to be done with a sepparate kernel module 
