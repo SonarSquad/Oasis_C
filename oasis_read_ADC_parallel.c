@@ -5,6 +5,7 @@
 
 #include "RPI4.h" 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 
@@ -79,7 +80,7 @@ int main()
    Define GPIOs as input 
    GPIOs used as laid out on the parallel ADC circuit board:
 
-ADS8422 -> Raspberry Pi 
+   ADS8422 -> Raspberry Pi 
    bit 0 =  GPIO 14     32-bit-string index 15
    bit 1 =  GPIO 15     32-bit-string index 16
    bit 2 =  GPIO 18     32-bit-string index 19
@@ -101,49 +102,64 @@ ADS8422 -> Raspberry Pi
    INP_GPIO(6); 
    INP_GPIO(7);
    INP_GPIO(8);
-   INP_GPIO(9);
-   INP_GPIO(10);  
-   INP_GPIO(11);   
    INP_GPIO(12);
    INP_GPIO(13);
    INP_GPIO(14);
    INP_GPIO(15);
    INP_GPIO(16);
-   INP_GPIO(17);
    INP_GPIO(18);
    INP_GPIO(19);
    INP_GPIO(20);
    INP_GPIO(21);
-   INP_GPIO(22);
    INP_GPIO(23);
    INP_GPIO(24);
    INP_GPIO(25);
    INP_GPIO(26);
-   INP_GPIO(27);
     
 
-	INP_GPIO(4);
-	OUT_GPIO(4); // redefine GPIO  as output for clock signal. 
+   INP_GPIO(3); // Define GPIO 3 as input for BUSY pin from ADC 
+	INP_GPIO(4); // Define GPIO 4 as input before next step 
+	OUT_GPIO(4); // Redefine GPIO 4 as output CONVST
+  
+   int CONVST = 4; 
 
-   int nbr_of_samples = 10; 
-   int data_array[10] = {}; 
-   int cnt = 0; 
+   GPIO_SET = 1 << CONVST;    // set CONVST HIGH 
+
+   int nbr_of_samples = 15000; 
+   int data_array[15000] = {}; 
+   int counter = 0; 
    // Disable IRQ  
-   // Local_irq_disable()   <-- Needs to be done with a sepparate kernel module 
+   // Local_irq_disable()  <-- This would needs to be done with a sepparate kernel module 
    // Local_fiq_disable()  <-- Needs to be done with a sepparate kernel module 
 
-	while(cnt < nbr_of_samples)
+	while(counter < nbr_of_samples)
 	 {
-		GPIO_SET = 1 << 4;    // set GPIO4 (Clock signal)
-      data_array[cnt] = GPIO_READ; // read the whole 32-bit GPIO register  
-		GPIO_CLR = 1 << 4; 	// reset GPIO4 to LOW (Clock signal)
-      cnt++;
+      GPIO_CLR = 1 << CONVST; 	// Reset CONVST to LOW - initiate adc conversion
+
+     _Bool BUSY_state = GPIO_READ_PIN(3);
+
+     //printf("%d\n",BUSY_state);
+      //while(GPIO_READ_PIN(3) == 0){ //forces wait intil GPIO(3) is set high 
+
+      
+
+      while(GPIO_READ_PIN(3) == 1){ 
+        // printf("entered BUSY loop");
+         // while the BUSY pin is high wait for ADC to finish conversion and change apears on BUSY pin
+         //BUSY_state = GPIO_READ_PIN(3);
+      }
+
+      data_array[counter] = GPIO_READ; // read the whole 32-bit GPIO register (includes ADC output)
+      sleep(0.001);
+      GPIO_SET = 1 << CONVST;   // Bring CONVST pin high again 
+
+      counter++;
     }
    //Enable IRQ
    //local_fiq_enable(); <-- Needs to be done with a sepparate kernel module 
    //local_irq_enable(); <-- Needs to be done with a sepparate kernel module 
 
-   for (int i = 0; i < nbr_of_samples; i++ ) // print the data array out 
+   for (int i = 0; i < nbr_of_samples; i++) // print the data array out 
    {
       printf("%i", data_array[i]); 
       if(i < nbr_of_samples - 1) // in order to NOT print a comma after last value 
@@ -151,6 +167,7 @@ ADS8422 -> Raspberry Pi
          printf(","); 
       }
    }
+
     
 	return 0; 
 }
