@@ -1,4 +1,4 @@
-// OASIS Parallel ADC SW test 0.2
+// OASIS Parallel ADC SW test 0.2 
 // Author: Tor K. Gjerde 
 
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 // Define which Raspberry Pi board are you using. Take care to have defined only one at time.
 
-#define BCM2711_PERI_BASE       0xFE000000
+#define BCM2711_PERI_BASE       0xFE000000    // Peripheral base register for RPI4 
 #define GPIO_BASE               (BCM2711_PERI_BASE + 0x00200000)	// GPIO controller 
 
 
@@ -45,8 +45,8 @@ extern struct bcm2835_peripheral bsc0;	// so use extern!!
 #define GPIO_SET 	*(gpio.addr + 7)  // sets   bits which are 1 ignores bits which are 0
 #define GPIO_CLR 	*(gpio.addr + 10) // clears bits which are 1 ignores bits which are 0
 
-#define GPIO_READ(g) 	*(gpio.addr + 13) &= (1<<(g)) // <--------- Explore this for faster SPEEEEED TOR! 
-                                                       // read the whole register in one go, and not one and one GPIO 
+#define GPIO_READ	        *(gpio.addr + 13) 
+#define GPIO_READ_PIN(g)	*(gpio.addr + 13) &= (1<<(g))
 
 // Function prototypes
 int map_peripheral(struct bcm2835_peripheral *p);
