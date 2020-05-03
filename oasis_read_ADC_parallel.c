@@ -139,10 +139,11 @@ int main()
 
 	while(counter < nbr_of_samples)
 	 {
-      GPIO_CLR = 1 << RD; 
       GPIO_CLR = 1 << CONVST; 	// Reset CONVST to LOW - initiate adc conversion
+      GPIO_CLR = 1 << RD;        // Bring synchronization pin RD low to make parallel data out available 
 
-     _Bool BUSY_state = GPIO_READ_PIN(BUSY);
+     
+     //_Bool BUSY_state = GPIO_READ_PIN(BUSY);
      //printf("%d\n",BUSY_state);
       //while(GPIO_READ_PIN(3) == 0){ //forces wait intil GPIO(3) is set high 
       //}
@@ -153,7 +154,7 @@ int main()
       }
 
       data_array[counter] = GPIO_READ; // read the whole 32-bit GPIO register (includes ADC output)
-      
+      //sleep(0.001);
       GPIO_SET = 1 << RD;        // Bring RD pin HIGH again 
       GPIO_SET = 1 << CONVST;   // Bring CONVST pin high again 
       
