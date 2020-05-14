@@ -1,11 +1,10 @@
+
+// Adopted for the OASIS system 
+
 /* bcm2835.c
-// C and C++ support for Broadcom BCM 2835 as used in Raspberry Pi
-// http://elinux.org/RPi_Low-level_peripherals
-// http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
-//
-// Author: Mike McCauley
-// Copyright (C) 2011-2013 Mike McCauley
-// $Id: bcm2835.c,v 1.28 2020/01/11 05:07:13 mikem Exp mikem $
+C and C++ support for Broadcom BCM 2835 as used in Raspberry Pi
+Athor: Mike McCauley
+$Id: bcm2835.c,v 1.28 2020/01/11 05:07:13 mikem Exp mikem $
 */
 
 
